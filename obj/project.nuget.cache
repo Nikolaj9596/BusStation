@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "6KUvEbfQm9kz8yfgKl1Or/E2uNvKU8TKxMYhTcRXE/TjvTfrDzI59eS0tIL2p22hy4HZe2T0RvdBTyvOEG7p/g==",
+  "success": true,
+  "projectFilePath": "/home/nikolaj/Universety/CollectiveDevelop/Test Repository/Test Repository.csproj",
+  "expectedPackageFiles": [
+    "/home/nikolaj/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.3/microsoft.aspnetcore.app.ref.7.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
