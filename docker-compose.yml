@@ -1,0 +1,37 @@
+version: '3.6'
+
+services:
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    volumes:
+      - ./frontend:/app/front
+      - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template
+    ports:
+      - 80:80
+    command: /bin/sh -c "envsubst '$$DOMAIN_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/conf.d/nginx.conf; while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\""
+
+  php:
+    container_name: php
+    build: .
+    ports:
+      - 8080:80
+    volumes:
+      - ./server:/var/www/html
+
+  postgres:
+    container_name: postgres
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: nik
+      POSTGRES_PASSWORD: 238924
+      POSTGRES_DB: auto_bus
+    volumes:
+      - ./initDB:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres_data:
