@@ -1,0 +1,16 @@
+@startuml
+
+title "Автостанция"
+
+actor "Сlient" as Client #red
+control "API Server" as Server #blue
+database "DataBase" as DB #green
+group Get City
+' Получение списка городов
+Client -[#red]> Server: Запрос на получени списка городов
+Server -[#blue]> DB: Запрос на получени списка городов
+DB -[#green]> Server: Возвращает объект городов из базы или None
+Server -[#blue]> Client: Возвращает список объектов городов или None
+end
+
+@enduml
