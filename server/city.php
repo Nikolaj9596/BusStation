@@ -3,14 +3,105 @@ $data = array(
   array(
     'id' => 1,
     'name' => 'Murom',
+    'schedule' => array(
+      array(
+        'id' => 1,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 1
+      ),
+
+      array(
+        'id' => 2,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 1
+      ),
+
+      array(
+        'id' => 3,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 1
+      ),
+    )
   ),
   array(
-    'id' => 1,
+    'id' => 2,
     'name' => 'Navashino',
+    'schedule' => array(
+      array(
+        'id' => 4,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 2
+      ),
+
+      array(
+        'id' => 5,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 2
+      ),
+
+      array(
+        'id' => 6,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 2
+      ),
+    )
   ),
   array(
-    'id' => 1,
+    'id' => 3,
     'name' => 'Moscow',
+    'schedule' => array(
+      array(
+        'id' => 7,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 3
+      ),
+      array(
+        'id' => 8,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 3
+      ),
+      array(
+        'id' => 9,
+        'departure_time' => '06:05',
+        'arrival_time' => '08:05',
+        'waypoints' => 'г. Калининград — пос. Космодемьянское через г. Гурьевск',
+        'departure_time_destination' => '08:25',
+        'arrival_time_destination' => '10:25',
+        'city_id' => 3
+      ),
+    )
   ),
 );
 
