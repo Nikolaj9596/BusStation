@@ -2,7 +2,7 @@
 $data = array(
   array(
     'id' => 1,
-    'name' => 'Murom',
+    'name' => 'Муром',
     'schedule' => array(
       array(
         'id' => 1,
@@ -37,7 +37,7 @@ $data = array(
   ),
   array(
     'id' => 2,
-    'name' => 'Navashino',
+    'name' => 'Навашино',
     'schedule' => array(
       array(
         'id' => 4,
@@ -72,7 +72,7 @@ $data = array(
   ),
   array(
     'id' => 3,
-    'name' => 'Moscow',
+    'name' => 'Москва',
     'schedule' => array(
       array(
         'id' => 7,
