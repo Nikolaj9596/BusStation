@@ -15,22 +15,22 @@ function evalScripts(container) {
 async function loadCity() {
   return fetch("http://localhost:8080/city.php")
     .then((response) => response.json())
-    .catch(function(error) {
+    .catch(function (error) {
       console.log("Error loading city file:", error);
     });
 }
 
 async function loadFliht(departure_city_id, arrival_city_id) {
   return fetch(
-    `http://localhost:8080/tikets.php?departure_city_id=${departure_city_id}&arrival_city_id=${arrival_city_id}`
+    `http://localhost:8080/tikets.php?departure_city_id=${departure_city_id}&arrival_city_id=${arrival_city_id}`,
   )
     .then((response) => response.json())
-    .catch(function(error) {
+    .catch(function (error) {
       console.log("Error loading city file:", error);
     });
 }
 
-scheduleLink.addEventListener("click", function(event) {
+scheduleLink.addEventListener("click", function (event) {
   function generateHeder(cityName, headerRow) {
     let th = document.createElement("th");
     th.textContent = `время отправления из г. ${cityName}`;
@@ -123,13 +123,13 @@ scheduleLink.addEventListener("click", function(event) {
     sidebar.appendChild(sidebarMenu);
   }
 
-  loadCity().then(function(data) {
+  loadCity().then(function (data) {
     var city = data;
     fetch("http://localhost:80/schedule.html")
-      .then(function(response) {
+      .then(function (response) {
         return response.text();
       })
-      .then(function(data) {
+      .then(function (data) {
         scheduleContent.innerHTML = data;
         mainContent.style.display = "none";
         tiketsContent.style.display = "none";
@@ -145,13 +145,13 @@ scheduleLink.addEventListener("click", function(event) {
         let firstChile = containerTables.children[0];
         firstChile.style.display = "block";
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log("Error loading schedule file:", error);
       });
   });
 });
 
-tiketLink.addEventListener("click", function(event) {
+tiketLink.addEventListener("click", function (event) {
   event.preventDefault();
 
   function generateSearchSelectForm(city, name) {
@@ -181,13 +181,13 @@ tiketLink.addEventListener("click", function(event) {
     return fGroup;
   }
 
-  loadCity().then(function(data) {
+  loadCity().then(function (data) {
     var city = data;
     fetch("http://localhost/tikets.html")
-      .then(function(response) {
+      .then(function (response) {
         return response.text();
       })
-      .then(function(data) {
+      .then(function (data) {
         tiketsContent.innerHTML = data;
         scheduleContent.style.display = "none";
         mainContent.style.display = "none";
@@ -213,14 +213,13 @@ tiketLink.addEventListener("click", function(event) {
         });
         fSearch.appendChild(button);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log("Error loading schedule file:", error);
       });
   });
 });
 
 function generateTiket(
-  tiket,
   departureCityName,
   departureTime,
   arrivalCityName,
@@ -228,12 +227,15 @@ function generateTiket(
   price,
   companyName,
   countOfTickets,
-) { 
+  ticketId
+) {
   const tiketElement = document.createElement("div");
   tiketElement.className = "tiket";
+  tiketElement.id = ticketId;
 
   const tiketItems = document.createElement("div");
   tiketItems.className = "tiket-items";
+
   // Carrier Item
   const carrierItem = document.createElement("div");
   carrierItem.className = "carrier-item";
@@ -245,6 +247,7 @@ function generateTiket(
   carrierName.appendChild(carrierSpan);
   carrierItem.appendChild(carrierName);
   tiketItems.appendChild(carrierItem);
+
   // Departure
   const departureElement = document.createElement("div");
   departureElement.className = "departure";
@@ -256,6 +259,7 @@ function generateTiket(
   departureCityNameElement.textContent = departureCityName;
   departureElement.appendChild(departureTimeElement);
   departureElement.appendChild(departureCityNameElement);
+  console.log(departureElement);
   tiketItems.appendChild(departureElement);
   // Arrival
   const arrivalElement = document.createElement("div");
@@ -276,7 +280,7 @@ function generateTiket(
   priceItems.className = "price-items";
   const priceDefault = document.createElement("div");
   priceDefault.className = "default-price price";
-  priceDefault.textContent = price;
+  priceDefault.textContent = `${price} ₽`;
   const priceSpan = document.createElement("span");
   priceSpan.className = "gray-text";
   priceSpan.textContent = "за 1 пассажира";
@@ -287,13 +291,81 @@ function generateTiket(
   priceItems.appendChild(priceSpan);
   priceItems.appendChild(freeSeats);
   priceElement.appendChild(priceItems);
-  tiketElement.appendChild(priceElement);
+  tiketItems.appendChild(priceElement);
   // Action
+
+  const action = document.createElement("div");
+  action.className = "action";
+  const orderButton = document.createElement("div");
+  orderButton.className = "order-button-outer";
+  const button = document.createElement("button");
+  button.className = "order-group-element order-button";
+  const internal_div = document.createElement("div");
+  internal_div.className = "order-button-slot-content";
+  internal_div.textContent = "Купить билет";
+  button.appendChild(internal_div);
+
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    buyTicket(ticketId);
+  });
+  orderButton.appendChild(button);
+  action.appendChild(orderButton);
+  tiketItems.appendChild(action);
+  tiketElement.appendChild(tiketItems);
+  return tiketElement;
 }
 
 function findTikets(departureCityId, arrivalCityId) {
-  loadFliht(departureCityId, arrivalCityId).then(function(data) {
+  loadFliht(departureCityId, arrivalCityId).then(function (data) {
     var flight = data;
-    const ticketsListElement = document.getElementById("ticket-list");
+    const ticketsListElement = document.getElementById("tiket-list");
+    flight.forEach((item) => {
+      item.tikets.forEach((tiket) => {
+        ticketsListElement.appendChild(
+          generateTiket(
+            item.departure_city.name,
+            item.departure_time,
+            item.arrival_city.name,
+            item.arrival_time,
+            tiket.price,
+            item.company_name,
+            item.count_of_seets,
+            tiket.id
+          ),
+        );
+      });
+    });
   });
+}
+
+function buyTicket(id) {
+  const tiketElement = document.getElementById(id);
+  tiketElement.remove();
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  // Prepare the request body
+  const body = JSON.stringify({"tiket_id": id, "booked": true});
+  console.log(body);
+  const url = "http://localhost:8080/tikets.php";
+
+  // Configure the fetch options
+  const options = {
+    method: "POST",
+    headers: headers,
+    body: body,
+  };
+
+  // Send the POST request
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("POST request successful");
+      console.log("Response:", data);
+    })
+    .catch((error) => {
+      console.log("Error:", error);
+    });
 }
