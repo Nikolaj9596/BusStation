@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS flights (
   FOREIGN KEY (arrival_city_id) REFERENCES city (id)
 );
 
-CREATE TABLE IF NOT EXISTS tickets (
+CREATE TABLE IF NOT EXISTS tikets (
   id INT PRIMARY KEY,
   flight_id INT,
   price DECIMAL(10, 2),
@@ -617,7 +617,7 @@ WHERE NOT EXISTS (
 );
 
 -- Generate 50 tickets
-INSERT INTO tickets (id, flight_id, price)
+INSERT INTO tikets (id, flight_id, price)
 SELECT *
 FROM (
   SELECT
@@ -628,6 +628,6 @@ FROM (
 ) AS new_rows
 WHERE NOT EXISTS (
   SELECT 1
-  FROM tickets
-  WHERE tickets.id = new_rows.id
+  FROM tikets
+  WHERE tikets.id = new_rows.id
 );
