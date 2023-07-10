@@ -1,163 +1,69 @@
 <?php
-$data = array(
-  array(
-    'id' => 1,
-    'flight_num' => 1,
-    'departure_city' => array(
-      'id' => 1,
-      'name' => 'Муром'
-    ),
-    'arrival_city' => array(
-      'id' => 2,
-      'name' => 'Навашино'    
-    ),
-    'departure_time' => '06:05',
-    'arrival_time' => '08:05',
-    'count_of_seats' => 3,
-    'company_name' => 'Аэрофлот',
-    'tikets' => array(
-      array(
-        'id' => 1,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 2,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 3,
-        'price' => 100,
-        'booked' => false
-      ),
-    )
-  ),
-
-  array(
-    'id' => 2,
-    'flight_num' => 2,
-    'departure_city' => array(
-      'id' => 2,
-      'name' => 'Навашино'
-    ),
-    'arrival_city' => array(
-      'id' => 3,
-      'name' => 'Москва'      
-    ),
-    'departure_time' => '06:05',
-    'arrival_time' => '08:05',
-    'count_of_seats' => 3,
-    'company_name' => 'Аэрофлот',
-    'tikets' => array(
-      array(
-        'id' => 4,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 5,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 6,
-        'price' => 100,
-        'booked' => false
-      ),
-    )
-  ),
-
-  array(
-    'id' => 3,
-    'flight_num' => 3,
-    'departure_city' => array(
-      'id' => 3,
-      'name' => 'Москва'
-    ),
-    'arrival_city' => array(
-      'id' => 1,
-      'name' => 'Муром'
-    ),
-    'departure_time' => '06:05',
-    'arrival_time' => '08:05',
-    'count_of_seats' => 3,
-    'company_name' => 'Аэрофлот',
-    'tikets' => array(
-      array(
-        'id' => 7,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 8,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 9,
-        'price' => 100,
-        'booked' => false
-      ),
-    )
-  ),
-
-  array(
-    'id' => 4,
-    'flight_num' => 4,
-    'departure_city' => array(
-      'id' => 3,
-      'name' => 'Москва'
-    ),
-    'arrival_city' => array(
-      'id' => 1,
-      'name' => 'Муром'
-    ),
-    'departure_time' => '06:05',
-    'arrival_time' => '08:05',
-    'count_of_seats' => 3,
-    'company_name' => 'Аэрофлот',
-    'tikets' => array(
-      array(
-        'id' => 1,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 2,
-        'price' => 100,
-        'booked' => false
-      ),
-      array(
-        'id' => 3,
-        'price' => 100,
-        'booked' => false
-      ),
-    )
-  ),
-);
-
-// Check if it's a GET request
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     // Retrieve any query parameters
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type');
     $departure_city_id = $_GET['departure_city_id'] ?? null;
     $arrival_city_id = $_GET['arrival_city_id'] ?? null;
     $filteredData = array();
+    $host = "postgres";
+    $port = "5432";
+    $dbname = "auto_bus";
+    $user = "nik";
+    $password = "238924";
 
-    foreach ($data as $flight) {
-      if ($flight['departure_city']['id'] == $departure_city_id && $flight['arrival_city']['id'] == $arrival_city_id) {
-        $filteredData[] = $flight;
-      }
-    };
-    // Set the response content type to JSON
-    header('Content-Type: application/json');
-    header("Access-Control-Allow-Origin: *"); // Replace * with the appropriate origin or set it dynamically based on the request origin.
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS"); // Add any additional HTTP methods your server supports.
-    header("Access-Control-Allow-Headers: Content-Type"); // Add any additional headers your server accepts.
 
-    // Send the JSON response
-    echo json_encode($filteredData);
+    try {
+        // Create a new PDO instance for the PostgreSQL connection
+        $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname;user=$user;password=$password");
 
+        // Set PDO error mode to exception
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Fetch city data
+        $flights = [];
+        $query = $pdo->query("SELECT f.id, f.flight_number, f.departure_city_id, f.arrival_city_id, f.departure_time, f.arrival_time, f.count_of_seats, f.company_name, d.name AS departure_city_name, a.name AS arrival_city_name FROM flights f INNER JOIN city d ON f.departure_city_id = d.id INNER JOIN city a ON f.arrival_city_id = a.id WHERE f.departure_city_id = {$departure_city_id} AND f.arrival_city_id = {$arrival_city_id}");
+        while ($row = $query->fetch(PDO::FETCH_ASSOC)) {
+            $flight = array (
+              'id' => $row['id'],
+              'flight_num' => $row['flight_number'],
+              'departure_city' => array(
+                'id' => $row['departure_city_id'],
+                'name' => $row['departure_city_name']
+              ),
+              'arrival_city' => array(
+                'id' => $row['arrival_city_id'],
+                'name' => $row['arrival_city_name']
+              ),
+              'departure_time' => $row['departure_time'],
+              'arrival_time' => $row['arrival_time'],
+              'count_of_seats' => $row['count_of_seats'],
+              'company_name' => $row['company_name'],
+              'tikets' => [],
+            );
+
+            // Fetch schedule data for the city
+            $tikensQuery = $pdo->query("SELECT * FROM tikets WHERE flight_id = {$row['id']}");
+            while ($tiketRow = $tikensQuery->fetch(PDO::FETCH_ASSOC)) {
+                $tiket = [
+                  'id' => $tiketRow['id'],
+                  'price' => $tiketRow['price'],
+                  'booked' => $tiketRow['booked']
+                ];
+                $flight['tikets'][] = $tiket;
+            }
+            $flights[] = $flight;
+        }
+
+        // Convert the data to JSON
+        $jsonData = json_encode($flights, JSON_UNESCAPED_UNICODE);
+        $pdo = null;
+        echo $jsonData;
+    } catch (PDOException $e) {
+        // Handle connection errors
+        echo "Connection failed: " . $e->getMessage();
+    }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Set the response headers for CORS
     header('Access-Control-Allow-Origin: *');

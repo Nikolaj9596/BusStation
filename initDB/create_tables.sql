@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS tikets (
   id INT PRIMARY KEY,
   flight_id INT,
   price DECIMAL(10, 2),
+  booked BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (flight_id) REFERENCES flights (id)
 );
 
