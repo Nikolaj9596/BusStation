@@ -25,8 +25,36 @@
   </header>
   <main>
 
-    <div class="schedule-content" id="schedule-content"></div>
-    <div id="tikets-content"></div>
+    <div class="schedule-content" id="schedule-content" style="display: none;">
+      <h1 id="pagetitle">Расписание</h1>
+      <div class="wrapper">
+        <aside class="sidebar" id="sidebar">
+        </aside>
+        <div class="container" id="container-tables">
+        </div>
+      </div>
+    </div>
+
+    <div id="tikets-content" style="display: none;">
+      <h1>Поиск Билетов</h1>
+      <div class="wrapper">
+        <div class="search-form">
+          <form action="" id="search-form">
+            <!-- <input type="date" class="form-control" placeholder="Дата отпарвления"> -->
+            <!-- <button type="submit" class="btn btn-primary form-control search-button order-button"> -->
+            <!-- Найти -->
+            <!-- </button> -->
+          </form>
+          <h3>Билеты</h3>
+          <div class="search-result mt-4" id="search-result">
+            <!-- Results will be displayed here -->
+            <div class="tiket-list" id="tiket-list">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="main-content" id="main-content">
       <h1>Автовокзал</h1>
       <img class="baner" src="https://yalta-krym.ru/images/news/jalta-avtovokzal-pano.jpg" alt="baner">
@@ -83,6 +111,7 @@
     </div>
   </main>
 </body>
- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="script.js"></script>
+
 </html>

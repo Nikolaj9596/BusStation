@@ -15,7 +15,7 @@ function evalScripts(container) {
 async function loadCity() {
   return fetch("http://localhost:8080/city.php")
     .then((response) => response.json())
-    .catch(function (error) {
+    .catch(function(error) {
       console.log("Error loading city file:", error);
     });
 }
@@ -25,12 +25,12 @@ async function loadFliht(departure_city_id, arrival_city_id) {
     `http://localhost:8080/tikets.php?departure_city_id=${departure_city_id}&arrival_city_id=${arrival_city_id}`,
   )
     .then((response) => response.json())
-    .catch(function (error) {
+    .catch(function(error) {
       console.log("Error loading city file:", error);
     });
 }
 
-scheduleLink.addEventListener("click", function (event) {
+scheduleLink.addEventListener("click", function(event) {
   function generateHeder(cityName, headerRow) {
     let th = document.createElement("th");
     th.textContent = `время отправления из г. ${cityName}`;
@@ -123,35 +123,45 @@ scheduleLink.addEventListener("click", function (event) {
     sidebar.appendChild(sidebarMenu);
   }
 
-  loadCity().then(function (data) {
+  loadCity().then(function(data) {
     var city = data;
-    fetch("http://localhost:80/schedule.html")
-      .then(function (response) {
-        return response.text();
-      })
-      .then(function (data) {
-        scheduleContent.innerHTML = data;
-        mainContent.style.display = "none";
-        tiketsContent.style.display = "none";
-        // evalScripts(scheduleContent);
-        const containerTables = document.getElementById("container-tables");
-        generateSideBar(city);
+    // scheduleContent.innerHTML = data;
+    scheduleContent.style.display = "block";
+    mainContent.style.display = "none";
+    tiketsContent.style.display = "none";
+    // evalScripts(scheduleContent);
+    const containerTables = document.getElementById("container-tables");
+    const sidebar = document.getElementById("sidebar");
 
-        console.log(containerTables);
-        city.forEach((item) => {
-          containerTables.appendChild(generateTable(item));
-        });
+    while (containerTables.firstChild) {
+        containerTables.removeChild(containerTables.firstChild);
+    }
 
-        let firstChile = containerTables.children[0];
-        firstChile.style.display = "block";
-      })
-      .catch(function (error) {
-        console.log("Error loading schedule file:", error);
-      });
+    while (sidebar.firstChild) {
+        sidebar.removeChild(sidebar.firstChild);
+    }
+
+    generateSideBar(city);
+
+    city.forEach((item) => {
+      containerTables.appendChild(generateTable(item));
+    });
+
+    let firstChile = containerTables.children[0];
+    firstChile.style.display = "block";
+    // fetch("http://localhost:80/schedule.html")
+    //   .then(function (response) {
+    //     return response.text();
+    //   })
+    //   .then(function (data) {
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error loading schedule file:", error);
+    //   });
   });
 });
 
-tiketLink.addEventListener("click", function (event) {
+tiketLink.addEventListener("click", function(event) {
   event.preventDefault();
 
   function generateSearchSelectForm(city, name) {
@@ -181,41 +191,45 @@ tiketLink.addEventListener("click", function (event) {
     return fGroup;
   }
 
-  loadCity().then(function (data) {
+  loadCity().then(function(data) {
     var city = data;
-    fetch("http://localhost/tikets.html")
-      .then(function (response) {
-        return response.text();
-      })
-      .then(function (data) {
-        tiketsContent.innerHTML = data;
-        scheduleContent.style.display = "none";
-        mainContent.style.display = "none";
 
-        const fSearch = document.getElementById("search-form");
+    scheduleContent.style.display = "none";
+    mainContent.style.display = "none";
+    tiketsContent.style.display = "block";
 
-        fromGroup = generateSearchSelectForm(city, "from");
-        toGroup = generateSearchSelectForm(city, "to");
-        fSearch.appendChild(fromGroup);
-        fSearch.appendChild(toGroup);
+    const fSearch = document.getElementById("search-form");
+    while (fSearch.firstChild) {
+      fSearch.removeChild(fSearch.firstChild);
+    }
+    fromGroup = generateSearchSelectForm(city, "from");
+    toGroup = generateSearchSelectForm(city, "to");
+    fSearch.appendChild(fromGroup);
+    fSearch.appendChild(toGroup);
 
-        button = document.createElement("button");
-        button.className =
-          "btn btn-primary form-control search-button order-button";
-        button.textContent = "Найти";
-        button.type = "submit";
-        button.addEventListener("click", (event) => {
-          event.preventDefault();
-          const from = document.getElementById("select-from").value;
-          const to = document.getElementById("select-to").value;
-          console.log(from, to);
-          findTikets(from, to);
-        });
-        fSearch.appendChild(button);
-      })
-      .catch(function (error) {
-        console.log("Error loading schedule file:", error);
-      });
+    button = document.createElement("button");
+    button.className =
+      "btn btn-primary form-control search-button order-button";
+    button.textContent = "Найти";
+    button.type = "submit";
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      const from = document.getElementById("select-from").value;
+      const to = document.getElementById("select-to").value;
+      console.log(from, to);
+      findTikets(from, to);
+    });
+    fSearch.appendChild(button);
+    // fetch("http://localhost/tikets.html")
+    //   .then(function(response) {
+    //     return response.text();
+    //   })
+    //   .then(function(data) {
+    //     tiketsContent.innerHTML = data;
+    //   })
+    //   .catch(function(error) {
+    //     console.log("Error loading schedule file:", error);
+    //   });
   });
 });
 
@@ -227,7 +241,7 @@ function generateTiket(
   price,
   companyName,
   countOfTickets,
-  ticketId
+  ticketId,
 ) {
   const tiketElement = document.createElement("div");
   tiketElement.className = "tiket";
@@ -317,9 +331,14 @@ function generateTiket(
 }
 
 function findTikets(departureCityId, arrivalCityId) {
-  loadFliht(departureCityId, arrivalCityId).then(function (data) {
+  loadFliht(departureCityId, arrivalCityId).then(function(data) {
     var flight = data;
     const ticketsListElement = document.getElementById("tiket-list");
+
+    while (ticketsListElement.firstChild) {
+      ticketsListElement.removeChild(ticketsListElement.firstChild);
+    }
+
     flight.forEach((item) => {
       item.tikets.forEach((tiket) => {
         ticketsListElement.appendChild(
@@ -331,7 +350,7 @@ function findTikets(departureCityId, arrivalCityId) {
             tiket.price,
             item.company_name,
             item.count_of_seets,
-            tiket.id
+            tiket.id,
           ),
         );
       });
@@ -347,7 +366,7 @@ function buyTicket(id) {
   };
 
   // Prepare the request body
-  const body = JSON.stringify({"tiket_id": id, "booked": true});
+  const body = JSON.stringify({ tiket_id: id, booked: true });
   console.log(body);
   const url = "http://localhost:8080/tikets.php";
 
